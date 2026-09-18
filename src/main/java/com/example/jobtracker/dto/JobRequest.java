@@ -1,10 +1,14 @@
 package com.example.jobtracker.dto;
-
+import jakarta.validation.constraints.NotBlank;
 public class JobRequest {
 
+    @NotBlank
     private String company;
+    @NotBlank
     private String role;
+    @NotBlank
     private String city;
+
 
     public String getCompany() {
         return company;

@@ -2,9 +2,9 @@ package com.example.jobtracker.controller;
 
 import com.example.jobtracker.dto.JobRequest;
 import com.example.jobtracker.dto.JobResponse;
-import com.example.jobtracker.model.Job;
 import com.example.jobtracker.service.JobService;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -15,8 +15,9 @@ public class JobController {
     public JobController(JobService jobService) {
         this.jobService = jobService;
     }
+
     @PostMapping("/jobs")
-public JobResponse createJob(@RequestBody JobRequest request) {
+public JobResponse createJob(@Valid @RequestBody JobRequest request) {
     return jobService.createJob(request);
 }
     @GetMapping("/jobs")
@@ -30,7 +31,7 @@ public JobResponse createJob(@RequestBody JobRequest request) {
     @PutMapping("/jobs/{id}")
     public JobResponse updateJob(
             @PathVariable Long id,
-            @RequestBody JobRequest request) {
+           @Valid @RequestBody JobRequest request) {
         return jobService.updateJob(id, request);
     }
     @DeleteMapping("/jobs/{id}")
