@@ -1,5 +1,7 @@
 package com.example.jobtracker.service;
 
+import com.example.jobtracker.dto.JobRequest;
+import com.example.jobtracker.dto.JobResponse;
 import com.example.jobtracker.model.Job;
 import com.example.jobtracker.repository.JobRepository;
 import org.springframework.stereotype.Service;
@@ -13,23 +15,70 @@ public class JobService {
     public JobService(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
     }
-    public Job createJob(Job job) {
-        return jobRepository.save(job);
+    public JobResponse createJob(JobRequest request) {
+        Job job = new Job();
+        job.setCompany(request.getCompany());
+        job.setRole(request.getRole());
+        job.setCity(request.getCity());
+        Job savedJob = jobRepository.save(job);
+
+        JobResponse response = new JobResponse();
+
+        response.setId(savedJob.getId());
+        response.setCompany(savedJob.getCompany());
+        response.setRole(savedJob.getRole());
+        response.setCity(savedJob.getCity());
+
+        return response;
     }
-    public List<Job> getAllJobs() {
-        return jobRepository.findAll();
+    public List<JobResponse> getAllJobs() {
+
+        List<Job> jobs = jobRepository.findAll();
+
+        return jobs.stream()
+                .map(job -> {
+                    JobResponse response = new JobResponse();
+
+                    response.setId(job.getId());
+                    response.setCompany(job.getCompany());
+                    response.setRole(job.getRole());
+                    response.setCity(job.getCity());
+
+                    return response;
+                })
+                .toList();
     }
-    public Optional<Job> getJobById(Long id) {
-        return jobRepository.findById(id);
+    public JobResponse getJobById(Long id) {
+
+        Job job = jobRepository.findById(id).orElseThrow();
+
+        JobResponse response = new JobResponse();
+
+        response.setId(job.getId());
+        response.setCompany(job.getCompany());
+        response.setRole(job.getRole());
+        response.setCity(job.getCity());
+
+        return response;
     }
-    public Job updateJob(Long id, Job job) {
+    public JobResponse updateJob(Long id, JobRequest request) {
+
         Job existingJob = jobRepository.findById(id).orElseThrow();
 
-        existingJob.setCompany(job.getCompany());
-        existingJob.setRole(job.getRole());
-        existingJob.setCity(job.getCity());
+        existingJob.setCompany(request.getCompany());
+        existingJob.setRole(request.getRole());
+        existingJob.setCity(request.getCity());
 
-        return jobRepository.save(existingJob);
+        Job savedJob = jobRepository.save(existingJob);
+
+        JobResponse response = new JobResponse();
+
+        response.setId(savedJob.getId());
+        response.setCompany(savedJob.getCompany());
+        response.setRole(savedJob.getRole());
+        response.setCity(savedJob.getCity());
+
+        return response;
     }
     public void deleteJob(Long id) {
         jobRepository.deleteById(id);

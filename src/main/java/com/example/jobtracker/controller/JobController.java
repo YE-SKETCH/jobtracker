@@ -1,11 +1,13 @@
 package com.example.jobtracker.controller;
 
+import com.example.jobtracker.dto.JobRequest;
+import com.example.jobtracker.dto.JobResponse;
 import com.example.jobtracker.model.Job;
 import com.example.jobtracker.service.JobService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 public class JobController {
@@ -14,20 +16,22 @@ public class JobController {
         this.jobService = jobService;
     }
     @PostMapping("/jobs")
-public Job createJob(@RequestBody Job job) {
-    return jobService.createJob(job);
+public JobResponse createJob(@RequestBody JobRequest request) {
+    return jobService.createJob(request);
 }
     @GetMapping("/jobs")
-    public List<Job> getAllJobs() {
+    public List<JobResponse> getAllJobs() {
         return jobService.getAllJobs();
     }
     @GetMapping("/jobs/{id}")
-    public Optional<Job> getJobById(@PathVariable Long id) {
+    public JobResponse getJobById(@PathVariable Long id) {
         return jobService.getJobById(id);
     }
     @PutMapping("/jobs/{id}")
-    public Job updateJob(@PathVariable Long id, @RequestBody Job job) {
-        return jobService.updateJob(id, job);
+    public JobResponse updateJob(
+            @PathVariable Long id,
+            @RequestBody JobRequest request) {
+        return jobService.updateJob(id, request);
     }
     @DeleteMapping("/jobs/{id}")
     public void deleteJob(@PathVariable Long id) {
