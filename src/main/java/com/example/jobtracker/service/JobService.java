@@ -2,12 +2,13 @@ package com.example.jobtracker.service;
 
 import com.example.jobtracker.dto.JobRequest;
 import com.example.jobtracker.dto.JobResponse;
+import com.example.jobtracker.exception.JobNotFoundException;
 import com.example.jobtracker.model.Job;
 import com.example.jobtracker.repository.JobRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class JobService {
@@ -50,7 +51,8 @@ public class JobService {
     }
     public JobResponse getJobById(Long id) {
 
-        Job job = jobRepository.findById(id).orElseThrow();
+        Job job = jobRepository.findById(id).
+                orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
         JobResponse response = new JobResponse();
 
@@ -63,8 +65,8 @@ public class JobService {
     }
     public JobResponse updateJob(Long id, JobRequest request) {
 
-        Job existingJob = jobRepository.findById(id).orElseThrow();
-
+        Job existingJob = jobRepository.findById(id).
+                        orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
         existingJob.setCompany(request.getCompany());
         existingJob.setRole(request.getRole());
         existingJob.setCity(request.getCity());
@@ -80,7 +82,12 @@ public class JobService {
 
         return response;
     }
-    public void deleteJob(Long id) {
+     public void deleteJob(Long id) {
+
+        jobRepository.findById(id)
+                .orElseThrow(() ->
+                        new JobNotFoundException("Job not found with id: " + id));
+
         jobRepository.deleteById(id);
     }
 }
