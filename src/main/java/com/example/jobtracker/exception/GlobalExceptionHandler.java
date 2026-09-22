@@ -13,6 +13,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(JobNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleJobNotFound(JobNotFoundException ex) {
+
+        return new ErrorResponse(404, ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(MethodArgumentNotValidException ex) {
@@ -26,4 +33,5 @@ public class GlobalExceptionHandler {
                 );
 
         return new ErrorResponse(400, "Validation failed", errors);
-    }}
+    }
+}
