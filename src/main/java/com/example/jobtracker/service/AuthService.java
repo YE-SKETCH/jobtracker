@@ -18,6 +18,7 @@ public class AuthService {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+
     }
     public void register(RegisterRequest request) {
 
