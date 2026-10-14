@@ -1,3 +1,4 @@
+
 package com.example.jobtracker.service;
 
 import io.jsonwebtoken.Jwts;
@@ -15,26 +16,28 @@ public class JwtService {
             "my-jobtracker-secret-key-my-jobtracker-secret-key";
 
     public String generateToken(String username) {
+        long currentTimeMillis = System.currentTimeMillis();
+
         return Jwts.builder()
                 .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .issuedAt(new Date(currentTimeMillis))
+                .expiration(new Date(currentTimeMillis + 1000L * 60 * 60))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(
-                secretKey.getBytes(StandardCharsets.UTF_8)
-        );
-    }
     public String extractUsername(String token) {
-
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(
+                secretKey.getBytes(StandardCharsets.UTF_8)
+        );
     }
 }
